@@ -1,4 +1,8 @@
-certifi
-pip-chill
+fastapi
 openai
+pip-chill
 pymongo
+scikit-learn
+sklearn
+typing
+uvicorn

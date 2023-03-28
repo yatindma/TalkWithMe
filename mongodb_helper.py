@@ -1,32 +1,28 @@
 from pymongo import MongoClient
 import configparser
 
+config = configparser.ConfigParser()
+config.read("config.ini")
+connection_string = config.get("MongoDB", "connection_string")
+db_name = config.get("MongoDB", "db_name")
+users_collection_name = config.get("MongoDB", "users_collection")
+chat_collection_name = config.get("MongoDB", "chat_collection")
+sources_collection_name = config.get("MongoDB", "sources_collection")
 
-def connect_to_mongodb():
-    """
-    Connects to MongoDB and returns the chat collection.
-    """
-    # Read MongoDB configuration from config.ini
-    config = configparser.ConfigParser()
-    config.read("config.ini")
-    connection_string = config.get("MongoDB", "connection_string")
-    db_name = config.get("MongoDB", "db_name")
-    collection_name = config.get("MongoDB", "collection_name")
+mongo_client = MongoClient(connection_string)
+db = mongo_client[db_name]
+users_collection = db[users_collection_name]
+chat_collection = db[chat_collection_name]
+sources_collection = db[sources_collection_name]
 
-    # Connect to MongoDB
-    mongo_client = MongoClient(connection_string)
-    db = mongo_client[db_name]
-    chat_collection = db[collection_name]
 
+def get_users_collection():
+    return users_collection
+
+
+def get_chat_collection():
     return chat_collection
 
 
-def store_chat(chat_collection, query, response):
-    """
-    Stores the chat conversation in the specified MongoDB collection.
-    """
-    chat = {
-        "user_message": query,
-        "bot_response": response
-    }
-    chat_collection.insert_one(chat)
+def get_sources_collection():
+    return sources_collection
